@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String   @unique  
+  password      String
+  role          String
+
+  // Relations
+  // Um admin pode ter vários blocos de disponibilidade
+  availabilities Availability[]
+  // Um admin pode ter vários agendamentos
+  adminBookings  Booking[]      @relation("AdminBookings")
+  // Um cliente pode ter vários agendamentos
+  clientBookings Booking[]      @relation("ClientBookings")
+
+}
+
+model Availability {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  startDate   DateTime
+  endDate     DateTime
+  
+  // Relation
+  adminId   String       @db.ObjectId
+  admin     User         @relation(fields: [adminId], references: [id])
+}
+
+
+model Service {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  durationInMinutes Int
+  price      Float 
+
+  // Relations
+  // Um serviço pode ter vários agendamentos
+  serviceBookingIds  String[]  @db.ObjectId
+  serviceBookings     Booking[]    @relation(fields: [serviceBookingIds], references: [id])
+}
+
+model Booking {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime    @default(now())  
+  startTime   DateTime 
+  totalPrice  Float  @default(0)
+
+  
+  // Relations
+
+  // Um agendamento pode ter um único cliente
+  clientId  String         @db.ObjectId
+  client    User           @relation("ClientBookings", fields: [clientId], references: [id])
+
+  // Um agendamento pode ter um único admin
+  adminId   String         @db.ObjectId
+  admin     User           @relation("AdminBookings", fields: [adminId], references: [id])
+
+  // Um agendamento pode ter vários service
+  serviceIds  String[]    @db.ObjectId
+  services    Service[]    @relation(fields: [serviceIds], references: [id])
+}
+
+
