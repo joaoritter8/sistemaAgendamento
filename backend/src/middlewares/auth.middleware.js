@@ -8,9 +8,7 @@ export async function isAuthenticated(req, res, next){
         return res.status(401).json({ message: 'Acesso negado!Token não fornecido ou malformado.'});  
     }
   
-    const token = authHeader && authHeader.split(' ')[1];
-
-    console.log(token);
+    const token = authHeader && authHeader.split(' ')[1];   
     
     try {
 

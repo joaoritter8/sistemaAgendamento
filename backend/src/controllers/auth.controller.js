@@ -1,5 +1,4 @@
-import loginService from "../services/login.service.js";
-
+import authService from '../services/auth.service.js';
 async function login(req, res) {
   try {
     const { email, password } = req.body;
@@ -13,7 +12,7 @@ async function login(req, res) {
     }    
 
     // Tenta fazer o login
-    const user = await loginService.login({ email, password });
+    const user = await authService.login({ email, password });
 
     // Retorna o usuário sem a senha
     res.status(200).json(user);
