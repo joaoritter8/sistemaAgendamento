@@ -32,7 +32,7 @@ async function create(bookingData: BookingPayload): Promise<BookingResponse> {
         },
     });
 
-    if (services.length !== serviceIds.length) {
+    if (!services || services.length !== serviceIds.length) {
         throw new AppError('Alguns serviços não foram encontrados', 404);
     }
 

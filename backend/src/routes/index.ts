@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import userRoutes from './users.routes.js';
-import authRoutes from './auth.routes.ts';
+import authRoutes from './auth.routes';
 import availabilityRoutes from './availability.routes.js';
 import serviceRoutes from './services.routes.js'; 
 import bookingRoutes from './bookings.routes.ts';

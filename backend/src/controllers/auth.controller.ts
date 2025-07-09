@@ -1,7 +1,10 @@
-import authService from '../services/auth.service.js';
+import authService from '../services/auth.service';
+import { Request, Response, NextFunction } from 'express';
+import { AuthPayload } from '../types/auth.types';
+
 async function login(req, res) {
   try {
-    const { email, password } = req.body;
+    const { email, password }: AuthPayload = req.body;
 
     // Validações
     if (!email || !password) {
