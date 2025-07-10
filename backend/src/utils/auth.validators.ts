@@ -1,6 +1,6 @@
 import { AuthPayload } from "../types/auth.types";
 import AppError from "./AppError";
-import { isValidEmail, isValidPassword } from "./validators";
+import { isValidEmail} from "./validators";
 
 export function validadeAuth(userData: AuthPayload): void {
   const { email, password } = userData;
@@ -14,5 +14,5 @@ export function validadeAuth(userData: AuthPayload): void {
   if (!password || typeof password !== 'string' || password.trim() === '') {
     throw new AppError('A senha é obrigatória', 422);
   }
-    
+
 }

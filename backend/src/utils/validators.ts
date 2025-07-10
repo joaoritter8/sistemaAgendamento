@@ -5,8 +5,11 @@ import { BookingPayload } from '../types/booking.types.ts';
 import { AuthPayload } from '../types/auth.types.ts';
 
 export function isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  if (!email || typeof email!== 'string' || email.trim() === '') {
+    throw new AppError('O email é obrigatório', 422);
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 }
 
 export function isValidISODate(dateString: string): boolean {  
