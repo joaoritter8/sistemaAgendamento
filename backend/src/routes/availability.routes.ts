@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import availabilityController from '../controllers/availability.controller.js';
-import {isAuthenticated, isAdmin} from '../middlewares/auth.middleware.js';
+import availabilityController from '../controllers/availability.controller';
+import {isAuthenticated, isAdmin} from '../middlewares/auth.middleware';
 
 const router = Router();
 

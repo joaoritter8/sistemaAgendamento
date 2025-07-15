@@ -81,7 +81,7 @@ async function update(id: string,  dataUpdate: UserUpdatePayload): Promise<UserR
   if(dataUpdate.email){
 
     const userWithEmail = await prisma.user.findUnique({
-      where: { dataUpdate.email },
+      where: { email:dataUpdate.email },
     });
   
     if(userWithEmail && dataUpdate.email !== existingUser.email) {
@@ -93,10 +93,11 @@ async function update(id: string,  dataUpdate: UserUpdatePayload): Promise<UserR
     throw new AppError('A nova senha não pode ser igual à senha atual', 422);
   }
 
+  if(dataUpdate.password){
+    const salt = await bcrypt.genSalt(12);
+    dataUpdate.password = await bcrypt.hash(dataUpdate.password, salt);
+  }
   
-  const salt = await bcrypt.genSalt(12);
-  dataUpdate.password = dataUpdate.password || existingUser.password; 
-  const hashedPassword = await bcrypt.hash(dataUpdate.password, salt);
 
   const updatedUser = await prisma.user.update({
     where: { id },

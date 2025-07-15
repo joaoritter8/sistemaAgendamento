@@ -1,9 +1,5 @@
 import {parseISO, isValid} from 'date-fns';  
-import { Booking } from '../types/types';
 import  AppError from '../utils/AppError.ts';
-import { BookingPayload } from '../types/booking.types.ts';
-import { AuthPayload } from '../types/auth.types.ts';
-
 export function isValidEmail(email: string): boolean {
   if (!email || typeof email!== 'string' || email.trim() === '') {
     throw new AppError('O email é obrigatório', 422);
