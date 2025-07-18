@@ -4,6 +4,13 @@ export interface AvailabilityCreatePayload {
     adminId: string;
 }
 
+export interface AvailabilityUpdatePayload {
+    startDate?: string;
+    endDate?: string;
+    adminId?: string;
+}
+
+
 export interface AvailabilityResponse{
     id: string;
     startDate: Date;

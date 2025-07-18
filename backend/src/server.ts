@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import routes from './routes/index.js'; // Importa o roteador principal
-import errorHandler from './utils/errorHandler.ts';
+import errorHandler from './utils/errorHandler';
 
 const app = express();
 const PORT = process.env.PORT;

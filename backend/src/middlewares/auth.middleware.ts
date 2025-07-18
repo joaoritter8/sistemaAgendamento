@@ -3,11 +3,11 @@ import prisma from '../lib/prisma';
 import { NextFunction, Request, Response } from 'express';
 import AppError from '../utils/AppError';
 
-export async function isAuthenticated(req: Request, res: Response, next: NextFunction) {
+export async function isAuthenticated(req: Request, res: Response, next: NextFunction): Promise<void> {
     const authHeader = req.headers['authorization'];
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Acesso negado!Token não fornecido ou malformado.' });
+        throw new AppError('Token de autenticação não fornecido', 401);
     }
 
     const token = authHeader && authHeader.split(' ')[1];
@@ -41,12 +41,31 @@ export async function isAuthenticated(req: Request, res: Response, next: NextFun
     }
 }
 
-export function isAdmin(req: Request, res: Response, next: NextFunction) {
+export function isAdmin(req: Request, res: Response, next: NextFunction): void {
   // Este middleware DEVE rodar DEPOIS do `isAuthenticated`
   if ((req as any).user && (req as any).user && (req as any).user.role === 'admin') {
     next(); // O usuário é um admin, pode continuar
   } else {    
-    return res.status(403).json({ message: 'Acesso negado. Rota exclusiva para administradores.' });
+    throw new AppError('Acesso negado. Usuário não é um administrador.', 403);
   }
+}
+
+export function isClient(req: Request, res: Response, next: NextFunction): void {
+    // Este middleware DEVE rodar DEPOIS do `isAuthenticated`
+    if ((req as any).user && (req as any).user.role === 'client') {
+        next(); // O usuário é um cliente, pode continuar
+    } else {
+        throw new AppError('Acesso negado. Usuário não é um cliente.', 403);
+    }
+}
+
+export function isClientOrAdmin(req: Request, res: Response, next: NextFunction): void {
+    const user = (req as any).user;
+    const userId = req.params.userId;
+    if (user.id === userId || user.role === 'admin') {
+        next();
+    } else {
+        throw new AppError('Acesso negado. Usuário não é um cliente ou administrador.', 403);
+    } 
 }
 

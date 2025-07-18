@@ -59,6 +59,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
       name, 
       password, 
       confirmPassword,
+      role
     });  
 
     res.status(200).json(updatedUser);

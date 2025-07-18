@@ -51,5 +51,26 @@ async function findAllByUserId(req: Request, res: Response, next: NextFunction) 
   }
 }
 
+async function update(req: Request, res: Response, next: NextFunction) {  
+  try {
+    const { id } = req.params;
+    const { startDate, endDate, adminId } = req.body;
+    if (id.length!== 24) {
+      throw new AppError("ID inválido", 422);
+    }
+    const availability = await availavilityService.findById(id);
+    if (!availability) {
+      throw new AppError("Disponibilidade não encontrada", 404);
+    }
+    // Validações
+    validateUpdateAvailability({ startDate, endDate, adminId });
+    const updatedAvailability = await availavilityService.update(id, { startDate, endDate, adminId });
+    res.status(200).json(updatedAvailability);
+  } catch (error) {
+    next(error);
+  }
+}
+
+
 
 export default { create, findAll, findAllByUserId };

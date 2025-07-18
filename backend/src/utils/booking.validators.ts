@@ -35,3 +35,24 @@ export function validateBookingData(data: BookingPayload): void {
   }  
   return;
 }
+
+export function validateUpdateBookingData(data: BookingPayload): void {
+  const { startDateTime, clientId, adminId, serviceIds } = data;
+
+  if (startDateTime && !isValidISODate(startDateTime)) {
+    throw new AppError('O formato do horário de início é inválido. Use o formato ISO 8601.', 422);
+  }
+
+  if (clientId && (typeof clientId !== 'string' || clientId.trim() === '' || clientId.length !== 24)) {
+    throw new AppError('O ID do cliente deve ser uma string válida com exatamente 24 caracteres.', 422);
+  }
+
+  if (adminId && (typeof adminId !== 'string' || adminId.trim() === '' || adminId.length !== 24)) {
+    throw new AppError('O ID do profissional deve ser uma string válida com exatamente 24 caracteres.', 422);
+  }
+
+  if (serviceIds && (!Array.isArray(serviceIds) || serviceIds.length === 0 || !serviceIds.every(id => typeof id === 'string' && id.trim() !== '' && id.length === 24))) {
+    throw new AppError('Cada ID de serviço deve ser uma string válida com exatamente 24 caracteres.', 422);
+  }
+    
+}
